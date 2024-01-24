@@ -1,6 +1,7 @@
 const board = document.getElementById("game_board");
 const instructions = document.querySelector(".instructions");
 const logo = document.querySelector("#logo");
+const score = document.querySelector('#score')
 
 let gameStart = false;
 
@@ -18,6 +19,7 @@ function draw() {
   board.innerHTML = "";
   drawSnake();
   drawFood();
+  updateScore()
 }
 
 function drawSnake() {
@@ -152,4 +154,10 @@ function reset() {
   food = generateFood();
   direction = 'right'
   gameSpeedDelay = 150;
+  updateScore()
+}
+
+function updateScore() {
+    const currentScore = snake.length - 1
+    score.innerHTML = currentScore.toString()
 }
