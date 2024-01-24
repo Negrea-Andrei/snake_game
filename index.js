@@ -1,49 +1,44 @@
+// DOM elements
 const board = document.getElementById("game_board");
 const instructions = document.querySelector(".instructions");
 const logo = document.querySelector("#logo");
 const score = document.querySelector("#score");
 const highScoreText = document.querySelector("#high_score");
 
+// Game variables
 let gameStart = false;
-
 const sizeGameBoard = 30;
-
 let gameSpeedDelay = 150;
 
+// Snake and food initialization
 let snake = [{ x: 15, y: 15 }];
-
 let food = generateFood();
-
 let direction = "right";
-
-let points = 0
+let points = 0;
 let highScore = 0;
 
+// Game loop interval variable
+let gameInterval;
+
+// Event listener for arrow keys
+document.addEventListener("keydown", pressArrows);
+
+// Main drawing function
 function draw() {
   board.innerHTML = "";
   drawSnake();
   drawFood();
   updateScore();
-  updateHighScore()
+  updateHighScore();
 }
 
+// Snake drawing functions
 function drawSnake() {
   snake.forEach((segment) => {
     const snakeElement = createGameElement("div", "snake");
     setPosition(snakeElement, segment);
     board.appendChild(snakeElement);
   });
-}
-
-function createGameElement(tag, className) {
-  const element = document.createElement(tag);
-  element.className = className;
-  return element;
-}
-
-function setPosition(element, position) {
-  element.style.gridColumn = position.x;
-  element.style.gridRow = position.y;
 }
 
 function drawFood() {
@@ -53,12 +48,7 @@ function drawFood() {
   board.appendChild(foodElement);
 }
 
-function generateFood() {
-  const x = Math.floor(Math.random() * sizeGameBoard) + 1;
-  const y = Math.floor(Math.random() * sizeGameBoard) + 1;
-  return { x, y };
-}
-
+// Functions related to movement and game logic
 function move() {
   const headSnake = { ...snake[0] };
   switch (direction) {
@@ -96,46 +86,6 @@ function move() {
   }
 }
 
-function startGame() {
-  gameStart = true;
-  logo.style.display = "none";
-  instructions.style.display = "none";
-  gameInterval = setInterval(() => {
-    move();
-    collision();
-    draw();
-  }, gameSpeedDelay);
-}
-
-function pressArrows(event) {
-  if (
-    (!gameStart && event.code === "Space") ||
-    (!gameStart && event.key === " ")
-  ) {
-    startGame();
-  } else {
-    switch (event.key) {
-      case "ArrowUp":
-        direction = "up";
-        break;
-
-      case "ArrowDown":
-        direction = "down";
-        break;
-
-      case "ArrowLeft":
-        direction = "left";
-        break;
-
-      case "ArrowRight":
-        direction = "right";
-        break;
-    }
-  }
-}
-
-document.addEventListener("keydown", pressArrows);
-
 function collision() {
   const head = snake[0];
 
@@ -154,6 +104,18 @@ function collision() {
   }
 }
 
+// Game initialization and control functions
+function startGame() {
+  gameStart = true;
+  logo.style.display = "none";
+  instructions.style.display = "none";
+  gameInterval = setInterval(() => {
+    move();
+    collision();
+    draw();
+  }, gameSpeedDelay);
+}
+
 function reset() {
   snake = [{ x: 10, y: 10 }];
   food = generateFood();
@@ -163,11 +125,55 @@ function reset() {
   updateHighScore();
 }
 
+// Function to handle arrow key presses
+function pressArrows(event) {
+  if ((!gameStart && event.code === "Space") || (!gameStart && event.key === " ")) {
+    startGame();
+  } else {
+    switch (event.key) {
+      case "ArrowUp":
+        direction = "up";
+        break;
+      case "ArrowDown":
+        direction = "down";
+        break;
+      case "ArrowLeft":
+        direction = "left";
+        break;
+      case "ArrowRight":
+        direction = "right";
+        break;
+    }
+  }
+}
+
+// Function to generate random food coordinates
+function generateFood() {
+  const x = Math.floor(Math.random() * sizeGameBoard) + 1;
+  const y = Math.floor(Math.random() * sizeGameBoard) + 1;
+  return { x, y };
+}
+
+// Function to create a game element (div or img)
+function createGameElement(tag, className) {
+  const element = document.createElement(tag);
+  element.className = className;
+  return element;
+}
+
+// Function to set the position of a game element
+function setPosition(element, position) {
+  element.style.gridColumn = position.x;
+  element.style.gridRow = position.y;
+}
+
+// Function to update the displayed score
 function updateScore() {
   const currentScore = snake.length - 1;
   score.innerHTML = `Score: ${currentScore.toString()}`;
 }
 
+// Function to update the displayed high score
 function updateHighScore() {
   const currentScore = snake.length - 1;
   if (currentScore > highScore) {
