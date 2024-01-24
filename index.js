@@ -117,13 +117,20 @@ function startGame() {
 }
 
 function reset() {
-  snake = [{ x: 10, y: 10 }];
-  food = generateFood();
-  direction = "right";
-  gameSpeedDelay = 150;
-  updateScore();
-  updateHighScore();
-}
+    snake = [{ x: 10, y: 10 }];
+    food = generateFood();
+    direction = "right";
+    gameSpeedDelay = 150; 
+    clearInterval(gameInterval);
+    gameInterval = setInterval(() => {
+      move();
+      collision();
+      draw();
+    }, gameSpeedDelay);
+    updateScore();
+    updateHighScore();
+  }
+  
 
 // Function to handle arrow key presses
 function pressArrows(event) {
