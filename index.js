@@ -1,7 +1,8 @@
 const board = document.getElementById("game_board");
 const instructions = document.querySelector(".instructions");
 const logo = document.querySelector("#logo");
-const score = document.querySelector('#score')
+const score = document.querySelector("#score");
+const highScoreText = document.querySelector("#high_score");
 
 let gameStart = false;
 
@@ -15,11 +16,15 @@ let food = generateFood();
 
 let direction = "right";
 
+let points = 0
+let highScore = 0;
+
 function draw() {
   board.innerHTML = "";
   drawSnake();
   drawFood();
-  updateScore()
+  updateScore();
+  updateHighScore()
 }
 
 function drawSnake() {
@@ -152,12 +157,22 @@ function collision() {
 function reset() {
   snake = [{ x: 10, y: 10 }];
   food = generateFood();
-  direction = 'right'
+  direction = "right";
   gameSpeedDelay = 150;
-  updateScore()
+  updateScore();
+  updateHighScore();
 }
 
 function updateScore() {
-    const currentScore = snake.length - 1
-    score.innerHTML = currentScore.toString()
+  const currentScore = snake.length - 1;
+  score.innerHTML = `Score: ${currentScore.toString()}`;
+}
+
+function updateHighScore() {
+  const currentScore = snake.length - 1;
+  if (currentScore > highScore) {
+    highScore = currentScore;
+    highScoreText.innerHTML = `High score: ${highScore.toString()}`;
+  }
+  highScoreText.style.display = "block";
 }
