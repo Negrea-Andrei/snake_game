@@ -1,3 +1,4 @@
+![Demo](images/snake_readme.gif)
 # Snake Game
 
 ## Live Demo
